@@ -5,10 +5,26 @@ import seaborn as sns
 import pandas
 import matplotlib.pyplot as plt
 import math
+<<<<<<< HEAD
+import statsmodels.api as sm
+=======
+>>>>>>> c5744eeb6905c7af0003c4494f50911022a902e5
 
 def read_csv(filename, **kwargs):
    return Po(pandas.read_csv(filename, **kwargs))
 
+<<<<<<< HEAD
+
+# added by Qiong
+def Logit(endog, exog, **kwargs):
+   return Po(sm.Logit(endog, exog, **kwargs))
+
+def get_dummies(data, prefix=None, prefix_sep='_', dummy_na=False, columns=None, sparse=False):
+   return Po(pandas.get_dummies(data, prefix, prefix_sep, dummy_na, columns, sparse))
+
+
+=======
+>>>>>>> c5744eeb6905c7af0003c4494f50911022a902e5
 class Po(pandas.core.frame.DataFrame):
    def __init__(self, df):
       super(Po, self).__init__(df)
