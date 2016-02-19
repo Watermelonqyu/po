@@ -19,17 +19,18 @@ def Logit(endog, exog, **kwargs):
 import sklearn.cross_validation as cv
 import sklearn.linear_model as lm
 
-def train_test_split(*arrays, **options):
-	return cv.train_test_split(*arrays, **options)
-	
 def LogisticRegression():
 	return lm.LogisticRegression()
 
+def train_test_split(*arrays, **options):
+	return cv.train_test_split(*arrays, **options)
 	
 	
 def get_dummies(data, prefix=None, prefix_sep='_', dummy_na=False, columns=None, sparse=False):
    return Po(pandas.get_dummies(data, prefix, prefix_sep, dummy_na, columns, sparse))
 
+def LinearRegression():
+   return lm.LinearRegression()
 
 class Po(pandas.core.frame.DataFrame):
    def __init__(self, df):
@@ -128,5 +129,3 @@ class Po(pandas.core.frame.DataFrame):
             sns.distplot(self[x], **kwargs)
 
       plt.show()
-
-
