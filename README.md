@@ -111,6 +111,29 @@ iris.Plot("Species", "SepalLength", kind="violin")
 ```
 
 
+### Perform Logistic Regression
+
+Here is an example for one data set:
+
+```
+# Get data
+data = po.read_csv("train.csv")
+
+y = data['Survived']
+X = data[['Age','SibSp','Fare']].fillna(0)
+
+indices = np.arange(data.shape[0])
+
+# Train data 
+X_train, X_test, y_train, y_test = po.train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Perform Logistic Regression
+lr = po.LogisticRegression()
+lr.fit(X_train, y_train)
+
+# Get predict value
+print("Accuracy of logistic regression (skilearn):",lr.predict(X_test), y_test)```
+```
 
 
 
