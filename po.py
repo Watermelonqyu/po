@@ -19,8 +19,6 @@ def Logit(endog, exog, **kwargs):
 import sklearn.cross_validation as cv
 import sklearn.linear_model as lm
 
-def LogisticRegression():
-	return lm.LogisticRegression()
 
 def train_test_split(*arrays, **options):
 	return cv.train_test_split(*arrays, **options)
@@ -28,9 +26,6 @@ def train_test_split(*arrays, **options):
 	
 def get_dummies(data, prefix=None, prefix_sep='_', dummy_na=False, columns=None, sparse=False):
    return Po(pandas.get_dummies(data, prefix, prefix_sep, dummy_na, columns, sparse))
-
-def LinearRegression():
-   return lm.LinearRegression()
 
 class Po(pandas.core.frame.DataFrame):
    def __init__(self, df):
@@ -43,6 +38,7 @@ class Po(pandas.core.frame.DataFrame):
 
    def query(self, expr, **kwargs):
       return Po(super(Po,self).query(expr, **kwargs))
+
 
    def Cluster(self, columns, **argv):
       if type(columns) != list:
@@ -129,3 +125,21 @@ class Po(pandas.core.frame.DataFrame):
             sns.distplot(self[x], **kwargs)
 
       plt.show()
+
+
+   # Modified my Qiong
+
+   # Linear Regression
+   def LinearRegression(self, x, y):
+      log = lm.LinearRegression()
+      log.fit(x, y)
+      print ("Linear Regression coef: \n", log.coef_)
+
+
+   # Logistic Regression
+   def LogisticRegression(self, x, y):
+      lin = lm.LogisticRegression()
+      lin.fit(x, y)
+      print ("Logistic Regression coef: \n", lin.coef_)
+
+
