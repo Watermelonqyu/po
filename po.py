@@ -1,6 +1,7 @@
 from sklearn.cluster import KMeans, DBSCAN, SpectralClustering, AgglomerativeClustering, MeanShift
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import kneighbors_graph
+from sklearn.ensemble import RandomForestClassifier
 import seaborn as sns
 import pandas
 import matplotlib.pyplot as plt
@@ -142,4 +143,9 @@ class Po(pandas.core.frame.DataFrame):
       lin.fit(x, y)
       print ("Logistic Regression coef: \n", lin.coef_)
 
+
+   # RandomForestClassifier
+   def RandomForestClassifier(self, x, y):
+      ran = RandomForestClassifier()
+      ran.fit(x, y)
 
