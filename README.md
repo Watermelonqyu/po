@@ -135,3 +135,29 @@ data.LinearRegression(X_train, y_train)
 
 ```
 
+### Random Forest Classifier
+
+```
+import po
+data = po.read_csv("train.csv")
+
+y = data['Survived']
+X = data[['Age','SibSp','Fare']].fillna(0)
+
+indices = np.arange(data.shape[0])
+
+# get the data you want to predict
+# need to remove the first row which is the name of each column
+features = data.columns[:3]
+preData = data[features]
+preData = preData[1:]
+
+# Get the train data and test data
+X_train, X_test, y_train, y_test = po.train_test_split(X, y, test_size=0.2, random_state=42)
+
+# 3 parameter
+# First and the second the train data
+# Third is the data you want to predict
+print (data.RandomForestClassifier(X_train, y_train, preData))
+
+```
