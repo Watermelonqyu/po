@@ -7,6 +7,8 @@ import pandas
 import matplotlib.pyplot as plt
 import math
 
+from numpy import savetxt
+
 def read_csv(filename, **kwargs):
    return Po(pandas.read_csv(filename, **kwargs))
 
@@ -145,7 +147,7 @@ class Po(pandas.core.frame.DataFrame):
 
 
    # RandomForestClassifier
-   def RandomForestClassifier(self, x, y):
+   def RandomForestClassifier(self, x, y, feature):
       ran = RandomForestClassifier()
       ran.fit(x, y)
-
+      print (ran.predict(feature))
