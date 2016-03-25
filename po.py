@@ -92,6 +92,66 @@ class Po(pandas.core.frame.DataFrame):
       print("\tClustering method: ", method, "\tNumber of clusters: ", len(set(labels)))
 
 
+
+   def Classify(self, columns, predictName, portion=0.5, **argv):
+      if type(columns) != list:
+         raise Exception("First parameter must be a list.")
+      if type(predictName) != str:
+         raise Exception("Second parameter must be a string.")
+
+      unknown_columns = set(columns)-set(self.keys())
+      if unknown_columns != set([]):
+         raise Exception("Invalid columns: " + str(unknown_columns))
+
+      option = {}
+
+      if argv.get('method') is None:
+         method = 'RandomForest'
+      # perform function
+      elif argv.get('method') == "LogisticRegression":
+         method = "LogisticRegression"
+      elif argv.get('method') == "LinearRegression":
+         method = "LinearRegression"
+      else:
+         if argv.get('method') not in Estimator:
+            raise Exception("Unknown classify method: " + argv.get('method'))
+
+      # specify portion
+      if argv.get('portion') is None:
+         portion = 0.5
+      else:
+         portion = argv.get('portion') 
+
+      ## Select data
+      x_rows = self.get(columns)
+      y_rows = self.get(predictName)
+
+      # round
+      actualNum = int(round(x_rows.shape[0] * portion))
+
+      x_actualRowTrain = x_rows[:actualNum]
+      y_actualRowTrain = y_rows[:actualNum] 
+
+      x_actualRowTest = x_rows[actualNum:]
+      y_actualRowTest = y_rows[actualNum:]
+
+      # perform function
+      if argv.get('method') == "LogisticRegression":
+         log = lm.LinearRegression()
+         log.fit(x_actualRowTrain, y_actualRowTrain)
+         print(log.predict(x_actualRowTest))
+      if argv.get('method') == "LinearRegression":
+         lin = lm.LogisticRegression()
+         lin.fit(x_actualRowTrain, y_actualRowTrain)
+         print(lin.predict(x_actualRowTest))
+      if argv.get('method') == "RandomForest":
+         ran = RandomForestClassifier()
+         ran.fit(x_actualRowTrain, y_actualRowTrain)
+           
+      print("\tClassify method: ", method, "\tResult: ")
+
+
+
    def point_entropy(self, points, i):
       d = []
 
@@ -128,26 +188,3 @@ class Po(pandas.core.frame.DataFrame):
             sns.distplot(self[x], **kwargs)
 
       plt.show()
-
-
-   # Modified my Qiong
-
-   # Linear Regression
-   def LinearRegression(self, x, y):
-      log = lm.LinearRegression()
-      log.fit(x, y)
-      print ("Linear Regression coef: \n", log.coef_)
-
-
-   # Logistic Regression
-   def LogisticRegression(self, x, y):
-      lin = lm.LogisticRegression()
-      lin.fit(x, y)
-      print ("Logistic Regression coef: \n", lin.coef_)
-
-
-   # RandomForestClassifier
-   def RandomForestClassifier(self, x, y, feature):
-      ran = RandomForestClassifier()
-      ran.fit(x, y)
-      print (ran.predict(feature))

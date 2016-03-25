@@ -10,7 +10,4 @@ indices = np.arange(data.shape[0])
 
 X_train, X_test, y_train, y_test = po.train_test_split(X, y, test_size=0.2, random_state=42)
 
-data.LogisticRegression(X_train, y_train)
-
-data.LinearRegression(X_train, y_train)
-
+print(y_train)

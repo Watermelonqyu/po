@@ -111,53 +111,14 @@ iris.Plot("Species", "SepalLength", kind="violin")
 ```
 
 
-### Perform Linear Regression and Logistic Regression
+### Perform Linear Regression, Logistic Regression, RandomForest
+
+the argument in Classify is: trainColumns, testColumns, portion, method
+
+the default portion is 0.5, method should be "LinearRegression", "LogisticRegression", "RandomForest"
+
 
 ```
-# load data
-data = po.read_csv("train.csv")
+iris.Classify(["PetalWidth", "PetalLength"], "Species", method="LinearRegression")
+``` 
 
-y = data['Survived']
-X = data[['Age','SibSp','Fare']].fillna(0)
-
-indices = np.arange(data.shape[0])
-
-# Get train dataset
-X_train, X_test, y_train, y_test = po.train_test_split(X, y, test_size=0.2, random_state=42)
-
-# perform Logistic Regression
-# Default print coef
-data.LogisticRegression(X_train, y_train)
-
-# perform Linear Regression
-# Default print coef
-data.LinearRegression(X_train, y_train)
-
-```
-
-### Random Forest Classifier
-
-```
-import po
-data = po.read_csv("train.csv")
-
-y = data['Survived']
-X = data[['Age','SibSp','Fare']].fillna(0)
-
-indices = np.arange(data.shape[0])
-
-# get the data you want to predict
-# need to remove the first row which is the name of each column
-features = data.columns[:3]
-preData = data[features]
-preData = preData[1:]
-
-# Get the train data and test data
-X_train, X_test, y_train, y_test = po.train_test_split(X, y, test_size=0.2, random_state=42)
-
-# 3 parameter
-# First and the second the train data
-# Third is the data you want to predict
-print (data.RandomForestClassifier(X_train, y_train, preData))
-
-```
