@@ -2,6 +2,7 @@ from sklearn.cluster import KMeans, DBSCAN, SpectralClustering, AgglomerativeClu
 from sklearn.preprocessing import StandardScaler
 from sklearn.neighbors import kneighbors_graph
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.cross_validation import cross_val_score
 import seaborn as sns
 import pandas
 import matplotlib.pyplot as plt
@@ -112,6 +113,8 @@ class Po(pandas.core.frame.DataFrame):
          method = "LogisticRegression"
       elif argv.get('method') == "LinearRegression":
          method = "LinearRegression"
+      elif argv.get('method') == "RandomForest":
+         method = "RandomForest"
       else:
          if argv.get('method') not in Estimator:
             raise Exception("Unknown classify method: " + argv.get('method'))
@@ -139,20 +142,37 @@ class Po(pandas.core.frame.DataFrame):
       if argv.get('method') == "LogisticRegression":
          log = lm.LinearRegression()
          log.fit(x_actualRowTrain, y_actualRowTrain)
-         self['_'+method+'_'][actualNum:] = log.predict(x_actualRowTest)
+         self['logisticPredict'] = ""
+         self['logisticPredict'][actualNum:] = lin.predict(x_actualRowTest)
+         self.to_csv("LogisticRegression.csv", sep='\t')
 
       if argv.get('method') == "LinearRegression":
          lin = lm.LogisticRegression()
          lin.fit(x_actualRowTrain, y_actualRowTrain)
-         self['_'+method+'_'][actualNum:] = lin.predict(x_actualRowTest)
+         self['linearPredict'] = ""
+         self['linearPredict'][actualNum:] = lin.predict(x_actualRowTest)
+         self.to_csv("LinearRegression.csv", sep='\t')
+         # self.insert(len(x_actualRowTest), 'linearPredict', pandas.Series(lin.predict(x_actualRowTest),  index=self.index))
+         # for pre in linPredi:
+           #  self['_'+method+'_'][actualNum] = pre
+            # actualNum = actualNum + 1
 
       if argv.get('method') == "RandomForest":
          ran = RandomForestClassifier()
          ran.fit(x_actualRowTrain, y_actualRowTrain)
+         self['RandomForestClassifier'] = ""
+         self['RandomForestClassifier'][actualNum:] = ran.predict(x_actualRowTest)
+         self.to_csv("RandomForestClassifier.csv", sep='\t')
+         scores = cross_val_score(ran, x_actualRowTest, y_actualRowTest)
+         print ("Method: RandomForestClassifier\n Score: ", scores)
+         
 
            
       print("\tClassify method: ", method, "\tResult: ")
 
+
+   def ClassifyAs(self, frame, method):
+      
 
 
    def point_entropy(self, points, i):
