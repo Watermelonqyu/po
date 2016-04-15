@@ -6,12 +6,14 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.cross_validation import cross_val_score
 from sklearn.naive_bayes import GaussianNB
 from sklearn.neighbors import KNeighborsClassifier
+from sklearn.preprocessing import Imputer
+
 from sklearn import svm
 import seaborn as sns
 import pandas
 import matplotlib.pyplot as plt
 import math
-
+import numpy
 from numpy import savetxt
 
 def read_csv(filename, **kwargs):
@@ -140,9 +142,31 @@ class Po(pandas.core.frame.DataFrame):
          portion = argv.get('portion') 
 
       ## Select data
+      ## need to fix the problem with NaN or infinate value
       x_rows = self.get(columns)
+      # x_rows = Imputer().fit_transform(x_rows)
       y_rows = self.get(predictName)
+      # y_rows = Imputer().fit_transform(y_rows)
 
+      xRowNum = 0
+      yRowNum = 0
+      for x in x_rows.index:
+         if numpy.any(numpy.isnan(x_rows.loc[x])):
+            print("Dropped: ", x, x_rows.loc[x])
+            x_rows.drop(x_rows.loc[x])
+            y_rows.drop(y_rows.loc[x])
+
+
+      if (xRowNum < yRowNum):
+         y_rows = y_rows[:xRowNum-2]
+
+      if (xRowNum > yRowNum):
+         x_rows = x_rows[:yRowNum-2]
+
+
+      print("ISNAN: ", numpy.any(numpy.isnan(x_rows)))
+      print("ISNAN: ", numpy.any(numpy.isnan(y_rows)))
+      # get portion
       if portion > 1:
          portion = 1
       elif portion < 0:
@@ -154,20 +178,20 @@ class Po(pandas.core.frame.DataFrame):
       # perform function
       if argv.get('method') == "LogisticRegression":
          log = lm.LogisticRegression()
-         log.fit(x_rows, y_rows)
+         log.fit(x_train, y_train)
          self['logisticPredict'] = ""
          for index in x_test.index:
             self['logisticPredict'].loc[index] = log.predict(x_test.loc[index])
-         print ("Method: ", method, "\tCoefficients: ", log.coef, "\tVariance score: %.2f", log.score(x_test, y_test))
+         print ("Method: ", method, "\tCoefficients: ", log.coef_, "\tVariance score: %.2f", log.score(x_test, y_test))
       
       
       if argv.get('method') == "LinearRegression":
          lin = lm.LinearRegression()
-         lin.fit(x_rows[x_train_index], y_rows[y_train_index])
+         lin.fit(x_rows, y_rows)
          self['linearPredict'] = ""
          for index in x_test.index:
             self['linearPredict'].loc[index] = lin.predict(x_test.loc[index])
-         print ("Method: ", method, "\tCoefficients: ", lin.coef, "\tVariance score: %.2f", lin.score(x_test, y_test))
+         print ("Method: ", method, "\tCoefficients: ", lin.coef_, "\tVariance score: %.2f", lin.score(x_test, y_test))
 
    def Classify(self, columns, predictName, portion=0.5, **argv):
       if type(columns) != list:
@@ -258,6 +282,76 @@ class Po(pandas.core.frame.DataFrame):
          scores = cross_val_score(kn, x_test, y_test)
          print ("Method: ", method, "\t Score: ", scores)
       
+   # Added by Qiong
+   # Use another datafrom to train
+   def ClassifyAs(self, DataFrame, columns, predictName, **argv):
+      if type(columns) != list:
+         raise Exception("First parameter must be a list.")
+      if type(predictName) != str:
+         raise Exception("Second parameter must be a string.")
+
+      unknown_columns = set(columns)-set(self.keys())
+      if unknown_columns != set([]):
+         raise Exception("Invalid columns: " + str(unknown_columns))
+
+      option = {}
+
+      # 
+      if argv.get('n_neighbors') is None:
+         n_neighbors = 3
+      else:
+         n_neighbors = argv.get('n_neighbors')
+
+
+      if argv.get('method') is None:
+         method = 'RandomForest'
+      # perform function
+      if argv.get('method') == "RandomForest":
+         method = "RandomForest"
+      elif argv.get('method') == "SVM":
+         method = "SVM"
+      elif argv.get('method') == "GaussianNB":
+         method = "GaussianNB"
+      elif argv.get('method') == "KNeighbors":
+         method = "KNeighbors"
+      else:
+         if argv.get('method') not in Estimator:
+            raise Exception("Unknown classify method: " + argv.get('method'))
+
+      ## Select data
+      x_train_rows = DataFrame.get(columns)
+      y_train_rows = DataFrame.get(predictName)
+
+      x_test_rows = self.get(columns)
+
+      # perform function
+      if argv.get('method') == "RandomForest":
+         ran = RandomForestClassifier()
+         ran.fit(x_train_rows, y_train_rows)
+         self['RandomForestClassifier'] = ""
+         for index in x_test_rows.index:
+            self['RandomForestClassifier'].loc[index] = ran.predict(x_test_rows.loc[index])
+         
+      if argv.get('method') == "SVM":
+         ssvm = svm.SVC()
+         ssvm.fit(x_train_rows, y_train_rows)
+         self['svmPredict'] = ""
+         for index in x_test_rows.index:
+            self['svmPredict'].loc[index] = ssvm.predict(x_test_rows.loc[index])
+      
+      if argv.get('method') == "GaussianNB":
+         gnb = GaussianNB()
+         gnb.fit(x_train_rows, y_train_rows)
+         self['GaussianNBPredict'] = ""
+         for index in x_test_rows.index:
+            self['GaussianNBPredict'].loc[index] = gnb.predict(x_test_rows.loc[index])
+
+      if argv.get('method') == "KNeighbors":
+         kn = KNeighborsClassifier(n_neighbors)
+         kn.fit(x_train_rows, y_train_rows)
+         self['KNeighborsPredict'] = ""
+         for index in x_test_rows.index:
+            self['KNeighborsPredict'].loc[index] = kn.predict(x_test_rows.loc[index])
 
    def point_entropy(self, points, i):
       d = []
