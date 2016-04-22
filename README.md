@@ -115,16 +115,21 @@ iris.Plot("Species", "SepalLength", kind="violin")
 
 the argument in Classify is: trainColumns, testColumns, portion, method
 
-the default portion is 0.5, method should be "LinearRegression", "LogisticRegression", 
+the default portion is 0.5, method should be "LinearRegression", "RandomForest", "SVM", "KNeighbors" 
 
 
 ```
 iris.Regression(["PetalWidth", "PetalLength"], "Species", method="LinearRegression")
 ``` 
 
-Same as Regresison, the default portion is 0.5, method should be "RandomForest", "GaussianNB", "KNeighbors", "SVM"
+Same as Regresison, the default portion is 0.5, method should be "LogisticRegression", "RandomForest", "GaussianNB", "KNeighbors", "SVM"
 For "KNeighbors", user needs to speficy "n_neighbors", if user doesn't specify, n_neighbors = 3 as default
 
 ```
 iris.Classify(["PetalWidth", "PetalLength"], "Species", method="RandomForest")
+```
+
+Can use different Dataframe to train the model for Classification
+```
+iris.ClassifyAs(["PetalWidth", "PetalLength"], "Species", iris1, method="RandomForest")
 ```

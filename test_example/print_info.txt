@@ -1,0 +1,18 @@
+LinearRegression       
+Coefficients:  [0.02126129  0.00763187  0.01864151  0.1863158   0.45670902  0.74161918]
+Variance score: %.2f 0.90216904001
+
+
+
+Registration
+[[ 1.30331543 -0.01708048]]      
+Variance score: %.2f 0.583333333333
+
+
+
+
+
+ARESD And FIRSTGEN
+SVM: 0.572916666667
+
+

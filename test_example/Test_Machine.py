@@ -1,41 +1,24 @@
 import po
 
 # get data from machineuft predict use LinearRegression and save it in L_machine
-iris = po.read_csv("D:\\MasterProject\\po-master\\po\\data\\machineuft.csv", encoding='utf-8')
+comp = po.read_csv("data\\computer_hardware.csv", encoding='utf-8')
 
-iris.Regression(["MYCT", "MMIN", "CACH", "CHMIN", "CHMAX", "PRP"], "ERP", method="LinearRegression", portion=0.9)
+comp.Regression(["MYCT", "MMIN", "CACH", "CHMIN", "CHMAX", "PRP"], "ERP", method="LinearRegression", portion=0.8)
 
-iris.to_csv("L_machine.csv", encoding='utf-8')
-
-
-
-# get data from machineuft predict use RandomForest and save it in R_machine
-iris = po.read_csv("D:\\MasterProject\\po-master\\po\\data\\machineuft.csv", encoding='utf-8')
-
-iris.Classify(["MYCT", "MMIN", "CACH", "CHMIN", "CHMAX", "PRP"], "ERP", method="RandomForest", portion=0.9)
-
-iris.to_csv("R_machine.csv", encoding='utf-8')
+comp.to_csv("Hardware_Linear.csv", encoding='utf-8')
 
 
-# get data from machineuft predict use Naive-Bayes and save it in N_machine
-iris = po.read_csv("D:\\MasterProject\\po-master\\po\\data\\machineuft.csv", encoding='utf-8')
+# get data from machineuft predict use LinearRegression and save it in L_machine
+comp = po.read_csv("data\\computer_hardware.csv", encoding='utf-8')
 
-iris.Classify(["MYCT", "MMIN", "CACH", "CHMIN", "CHMAX", "PRP"], "ERP", method="GaussianNB", portion=0.9)
+comp.Regression(["MYCT", "MMIN", "CACH", "CHMIN", "CHMAX", "PRP"], "ERP", method="RandomForest", portion=0.8)
 
-iris.to_csv("N_machine.csv", encoding='utf-8')
-
-
-# get data from machineuft predict use SVM and save it in S_machine
-iris = po.read_csv("D:\\MasterProject\\po-master\\po\\data\\machineuft.csv", encoding='utf-8')
-
-iris.Classify(["MYCT", "MMIN", "CACH", "CHMIN", "CHMAX", "PRP"], "ERP", method="SVM", portion=0.9 )
-
-iris.to_csv("S_machine.csv", encoding='utf-8')
+comp.to_csv("Hardware_RandomForest.csv", encoding='utf-8')
 
 
-#  get data from machineuft predict use KNeighbors and save it in K_machine
-iris = po.read_csv("D:\\MasterProject\\po-master\\po\\data\\machineuft.csv", encoding='utf-8')
+# get data from machineuft predict use LinearRegression and save it in L_machine
+comp = po.read_csv("data\\computer_hardware.csv", encoding='utf-8')
 
-iris.Classify(["MYCT", "MMIN", "CACH", "CHMIN", "CHMAX", "PRP"], "ERP", method="KNeighbors", portion=0.9 , n_neighbors=3)
+comp.Regression(["MYCT", "MMIN", "CACH", "CHMIN", "CHMAX", "PRP"], "ERP", method="KNeighbors", n_neighbors=4, portion=0.8)
 
-iris.to_csv("K_machine.csv", encoding='utf-8')
+comp.to_csv("Hardware_KN.csv", encoding='utf-8')
